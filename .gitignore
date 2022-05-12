@@ -1,0 +1,29 @@
+# useless macOS file
+.DS_Store
+
+# Don't steal our secrets!
+.env*
+!.env.example
+
+
+# Local Netlify folder
+.netlify
+
+# Gatsby cache directory
+.cache/
+.wordpress-cache/
+
+# npm depenedencies
+node_modules
+
+# Gatsby output directory
+public/
+
+# error logs
+*.log
+
+# diff files
+*.diff
+
+# node dependencies
+node_modules

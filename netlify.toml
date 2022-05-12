@@ -1,0 +1,22 @@
+[build]
+  command = "gatsby build"
+  publish = "public"
+
+[build.environment]
+  YARN_VERSION = "1.22.0"
+  YARN_FLAGS = "--no-ignore-optional"
+
+[[plugins]]
+  package = "@netlify/plugin-gatsby"
+
+[[plugins]]
+  package = "netlify-plugin-submit-sitemap"
+	[plugins.inputs]
+	baseUrl = "https://frontmatter.kitchen"
+	sitemapPath = "/sitemap.xml"
+	ignorePeriod = 3600
+	providers = [
+		"google",
+		"bing",
+		"yandex"
+	]
