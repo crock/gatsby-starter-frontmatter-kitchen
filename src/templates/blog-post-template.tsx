@@ -4,18 +4,19 @@ import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import Prism from "prismjs"
 import Seo from "../components/Seo"
 import { Disqus } from "gatsby-plugin-disqus"
-import JamComments from "@jam-comments/gatsby/ui";
+import JamComments from "@jam-comments/gatsby/ui"
 import moment from "moment"
 import { DotsCircleHorizontalIcon } from "@heroicons/react/solid"
-import FMK from '../../FrontmatterKitchen.config'
+import FMK from "../../FrontmatterKitchen.config"
+import { Wrapper } from "../components/core"
 
 export default function BlogPostTemplate({ data, pageContext }) {
-	const post = data.post
+	const post = data.markdownRemark
 
 	const disqusConfig = {
-		url: pageContext.path,
+		url: pageContext.pagePath,
 		identifier: post.id,
-		title: post.title,
+		title: post.frontmatter.title,
 	}
 
 	useEffect(() => {
@@ -132,31 +133,31 @@ export default function BlogPostTemplate({ data, pageContext }) {
 						</svg>
 					</div>
 				</div>
-				<div className="relative px-4 sm:px-6 lg:px-8">
+				<Wrapper className="relative px-4 sm:px-6 lg:px-8">
 					<div className="text-lg max-w-prose mx-auto">
-						{post.categories.nodes.length > 1 ? (
+						{post.frontmatter.categories.length > 1 ? (
 							<span className="block text-base text-center text-primary font-semibold tracking-wide uppercase">
-								{post.categories.nodes[1].name}
+								{post.frontmatter.categories[0].name}
 							</span>
 						) : null}
 						<h1 className="my-2 block text-3xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-							{post.title}
+							{post.frontmatter.title}
 						</h1>
-						<div className="flex-inline flex-row flex-nowrap text-base text-center">
-							<span>
+						<div className="flex flex-row flex-nowrap justify-center items-center text-base text-center">
+							<div>
 								<span className="font-semibold text-gray-500">
 									Written by
 								</span>
 								{` `}
 								<span className="text-primary font-bold">
-									{post.author.node.name}
+									{post.frontmatter.author}
 								</span>
-							</span>
+							</div>
 							<DotsCircleHorizontalIcon
 								color="#d1d1d1"
-								className="mx-2"
+								className="mx-2 w-[20px]"
 							/>
-							<span>
+							<div>
 								<span className="font-semibold text-gray-500">
 									Published on
 								</span>
@@ -169,31 +170,49 @@ export default function BlogPostTemplate({ data, pageContext }) {
 										"MMMM DD, YYYY"
 									)}
 								</time>
-							</span>
+							</div>
 						</div>
 					</div>
 					<div
 						className="mt-6 prose prose-primary prose-lg text-gray-500 mx-auto"
-						dangerouslySetInnerHTML={{ __html: post.content }}
+						dangerouslySetInnerHTML={{ __html: post.html }}
 					></div>
-					{ FMK.commentSystem ? <div className="block px-2 lg:px-0 lg:mx-auto mt-16 w-full lg:w-1/2">
-						{ FMK.commentSystem === "disqus" ? <Disqus config={disqusConfig} /> : null }
-						{ FMK.commentSystem === "jamcomments" ? <JamComments
-							pageContext={pageContext}
-							apiKey={process.env.JAM_COMMENTS_API_KEY}
-							domain={process.env.JAM_COMMENTS_DOMAIN}
-						/> : null }
-					</div> : null }
-				</div>
+					{FMK.commentSystem ? (
+						<div className="block px-2 lg:px-0 lg:mx-auto mt-16 w-full lg:w-1/2">
+							{FMK.commentSystem === "disqus" ? (
+								<Disqus config={disqusConfig} />
+							) : null}
+							{FMK.commentSystem === "jamcomments" ? (
+								<JamComments
+									pageContext={pageContext}
+									apiKey={process.env.JAM_COMMENTS_API_KEY}
+									domain={process.env.JAM_COMMENTS_DOMAIN}
+								/>
+							) : null}
+						</div>
+					) : null}
+				</Wrapper>
 			</div>
 		</article>
 	)
 }
 
-// export const query = graphql`
-// 	query BlogPostQuery($id: Int!) {
-// 		markdownRemark(id: { eq: $id }) {
-			
-// 		}
-// 	}
-// `
+export const query = graphql`
+	query BlogPostQuery($id: String) {
+		markdownRemark(id: { eq: $id }) {
+			id
+			html
+			excerpt(pruneLength: 280, format: PLAIN)
+			frontmatter {
+				categories
+				date
+				description
+				lastmod
+				slug
+				tags
+				title
+				author
+			}
+		}
+	}
+`

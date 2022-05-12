@@ -5,7 +5,7 @@ import { Wrapper } from "../components/core/"
 import Pagination from "../components/Pagination"
 
 const BlogList = ({ data, pageContext }) => {
-	const posts = data.allWpPost.edges.map((edge) => edge.node)
+	const posts = data.allMarkdownRemark.edges.map((edge) => edge.node)
 
 	return (
 		<>
@@ -22,16 +22,13 @@ const BlogList = ({ data, pageContext }) => {
 									className="relative bg-white dark:bg-gray-800 text-black dark:text-white rounded shadow p-4 h-auto min-h-[300px]"
 								>
 									<h3 className="font-heading text-2xl mb-2">
-										{post.title}
+										{post.frontmatter.title}
 									</h3>
 									<p
 										className="font-body leading-8"
-										dangerouslySetInnerHTML={{
-											__html: post.excerpt,
-										}}
-									></p>
+									>{post.excerpt}</p>
 									<Link
-										to={post.uri}
+										to={`/blog/${post.frontmatter.slug}`}
 										className="bg-primary-light hover:bg-primary text-white py-2 px-3 text-lg font-semibold uppercase rounded-sm mt-4 absolute bottom-4"
 									>
 										Read More
@@ -46,12 +43,28 @@ const BlogList = ({ data, pageContext }) => {
 	)
 }
 
-// export const query = graphql`
-// 	query blogListQuery($skip: Int!, $limit: Int!) {
-// 		allMarkdownRemark(limit: $limit, skip: $skip) {
-			
-// 		}
-// 	}
-// `
+export const query = graphql`
+	query blogListQuery($skip: Int!, $limit: Int!) {
+		allMarkdownRemark(limit: $limit, skip: $skip) {
+			edges {
+				node {
+					id
+					html
+					excerpt(pruneLength: 280, format: PLAIN)
+					frontmatter {
+						categories
+						date
+						description
+						lastmod
+						slug
+						tags
+						title
+						author
+					}
+				}
+			}
+		}
+	}
+`
 
 export default BlogList

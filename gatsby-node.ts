@@ -74,27 +74,25 @@ export const createPages: GatsbyNode["createPages"] = async ({
 	})
 
 	const { errors, data } = await graphql(`
-	query {
-		posts: allMarkdownRemark(
-		  sort: { fields: [frontmatter___date], order: DESC }
-		  filter: { fields: { collection: { eq: "blog" }, frontmatter___draft: { eq: false } } }
-		) {
-		  edges {
-			node {
-			  id
-			  fields {
-				slug
-			  }
-			  frontmatter {
-				title
-				slug
-				date
-			  }
-			  excerpt(pruneLength: 280)
+		{
+			posts: allMarkdownRemark(
+				filter: {
+					fields: { collection: { eq: "blog" } }
+					frontmatter: { draft: { eq: false } }
+				}
+				sort: { fields: frontmatter___date, order: DESC }
+			) {
+				edges {
+					node {
+						id
+						frontmatter {
+							date
+							slug
+						}
+					}
+				}
 			}
-		  }
 		}
-	  }
 	`)
 
 	if (errors) {
