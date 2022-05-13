@@ -1,5 +1,6 @@
 import React from "react"
 import { ILayout } from "../@interfaces/"
+import Navigation from "../components/Navigation"
 import { createGlobalStyle } from "styled-components"
 import tw from "twin.macro"
 
@@ -10,7 +11,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    ${tw`text-black dark:text-white`}
+    ${tw`text-black dark:text-white bg-gray-50 dark:bg-gray-900`}
   }
 
   a {
@@ -21,9 +22,10 @@ const GlobalStyles = createGlobalStyle`
 const Layout = ({ children }: ILayout) => {
 	return (
 		<>
-			<main>
-        {children}
-      </main>
+      <Navigation />
+      <div className="px-4 lg:px-0 lg:container mx-auto relative">
+			  <main>{children}</main>
+      </div>
 			<GlobalStyles />
 		</>
 	)

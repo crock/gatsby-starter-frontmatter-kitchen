@@ -66,6 +66,13 @@ const config: GatsbyConfig = {
 				name: `images`,
 			},
 		},
+		{
+			resolve: `gatsby-source-filesystem`,
+			options: {
+				path: `${__dirname}/static`,
+				name: `images`,
+			},
+		},
 		`gatsby-plugin-image`,
 		"gatsby-plugin-sharp",
 		{
@@ -75,7 +82,25 @@ const config: GatsbyConfig = {
 			},
 		},
 		`gatsby-transformer-sharp`,
-		`gatsby-transformer-remark`,
+		{
+			resolve: `gatsby-transformer-remark`,
+			options: {
+				plugins: [
+					`gatsby-remark-copy-linked-files`,
+					{
+						resolve: `gatsby-remark-images`,
+						options: {
+							maxWidth: 1200,
+							backgroundColor: "transparent",
+							disableBgImageOnAlpha: true,
+							withWebp: true,
+							linkImagesToOriginal: false,
+							quality: 70,
+						},
+					},
+				],
+			},
+		},
 		`gatsby-transformer-json`,
 		`gatsby-plugin-postcss`,
 		`gatsby-plugin-styled-components`,

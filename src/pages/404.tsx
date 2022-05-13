@@ -9,8 +9,8 @@ const NotFoundPage = () => {
 				title="404: Page Not Found"
 				description="The page you are trying to reach does not exist. Click the browser's back button to go back."
 			/>
-			<h1 className="font-black text-2xl mb-3">404: Page Not Found</h1>
-			<p className="font-normal text-xl leading-4">
+			<h1 className="font-black text-2xl mb-3 mt-0">404: Page Not Found</h1>
+			<p className="font-normal text-base leading-6">
 				Looks like you took a wrong turn, why not{" "}
 				<Link to="/" className="underline">
 					go back{" "}
